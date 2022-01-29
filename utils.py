@@ -54,31 +54,13 @@ def get_sentiment(tweet_text):
     return score
 
 
-def clean_tweet(tweet_text):
+def clean_tweet(text, *reg_expr):
     """
-    Takes body of tweet as input and returns a cleaned version of the tweet.
+    Takes text and regex expressions as input and returns a cleaned version of the text.
     """
-    tweet_text = remove_mentions(tweet_text)
-    tweet_text = remove_hashtags(tweet_text)
-    return tweet_text
-
-
-def remove_mentions(text):
-    """
-    Takes text as input and removes mentions of user
-    """
-    clean_text = re.sub("@[a-zA-Z0-9_]+", "", text)
-    return clean_text
-
-
-def remove_hashtags(text):
-    """
-    Takes text as input and removes hashtags used in query
-    """
-    hashtag_re = '#[Bb]ook[Rr]eview|#[Bb]ook[Rr]ecommendations' # TODO this is hardcoded for now, look into
-    # improving this in the event that more hashtags are added
-    clean_text = re.sub(hashtag_re, '', text)
-    return clean_text
+    for expr in reg_expr:
+        text = re.sub(expr, '', text)
+    return text
 
 
 # load_env()
