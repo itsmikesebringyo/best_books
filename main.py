@@ -46,7 +46,7 @@ def main():
     for tweet in data:
         raw_text = tweet.get('text')
         print(raw_text)
-        clean_text = clean_tweet(raw_text, *CLEANING_MAP.values()) 
+        clean_text = clean_tweet(raw_text, CLEANING_MAP.values()) 
         print(clean_text)
         raw_score = get_sentiment(raw_text)
         print(raw_score)

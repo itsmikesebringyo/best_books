@@ -54,7 +54,7 @@ def get_sentiment(tweet_text):
     return score
 
 
-def clean_tweet(text, *reg_expr):
+def clean_tweet(text, reg_expr):
     """
     Takes text and regex expressions as input and returns a cleaned version of the text.
     """
