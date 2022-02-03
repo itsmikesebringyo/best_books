@@ -3,6 +3,8 @@ import requests
 import datetime
 from pathlib import Path
 from dotenv import load_dotenv
+from google.cloud import bigquery
+from google_auth_oauthlib import flow
 import spacy
 # import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -66,7 +68,7 @@ def get_authors(tweet_text):
     """
     Takes tweet text as input and returns a list of people mentioned 
     """
-    doc = NLP(tweet_text.title())
+    doc = NLP(tweet_text)
 
     authors = []
     for ent in doc.ents:
@@ -74,6 +76,24 @@ def get_authors(tweet_text):
             authors.append(ent.text)
 
     return authors
+
+
+def bq_insert(tweet_data, bq_table):
+    """
+    Takes a list of tweet data and bigquery table as input and inserts the data into the table
+    """
+
+    appflow = flow.InstalledAppFlow.from_client_secrets_file(
+        "client_secrets.json", scopes=["https://www.googleapis.com/auth/bigquery"]
+    )
+    credentials = appflow.run_local_server()
+    bq_client = bigquery.Client(project="", credentials=credentials)
+    errors = bq_client.insert_rows_json(bq_table, tweet_data)
+
+    if errors == []:
+        print('New rows have been added')
+    else:
+        print(f'Encountered errors while inserting rows: {errors}')
 
 
 def parse_tweets(request_object, tweets_list=[]):
@@ -95,14 +115,13 @@ def parse_tweets(request_object, tweets_list=[]):
         raw_sentiment = get_sentiment(text)
 
         clean_text = clean_tweet(text, CLEANING_MAP.values())
-        print(clean_text)
+        # print(clean_text)
         # for now, we'll grab author mentions
         # later, train a custom model to recognize book titles
         authors = get_authors(clean_text)
 
         for author in authors:
-            print(author)
-            record = [tweet_id, created_at, text, author]
+            record = {u'tweet_id': tweet_id, u'created_at': created_at, u'text': text, u'author': author}
             tweets_list.append(record)
 
         # TODO: once a custom NLP model is created and works for recognizing book titles, implement logic below
