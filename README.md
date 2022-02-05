@@ -2,6 +2,7 @@
 Figure out what books the masses are talking about
 
 Link to GitHub Pages site: https://itsmikesebringyo.github.io/best_books/
+Link to GitHub site: https://github.com/itsmikesebringyo/best_books
 
 ## Authors
 
