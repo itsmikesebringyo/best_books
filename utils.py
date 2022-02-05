@@ -46,7 +46,6 @@ def connect_to_endpoint(url, headers, params):
         headers=headers,
         params=params
     )
-    print(response.status_code)
     if response.status_code != 200:
         raise Exception(response.status_code, response.text)
     return response.json()
@@ -73,7 +72,7 @@ def get_authors(tweet_text):
     authors = []
     for ent in doc.ents:
         if (ent.label_ == "PERSON") and (len(ent.text.split()) > 1):
-            authors.append(ent.text)
+            authors.append(ent.text.strip().title())
 
     return authors
 
@@ -137,12 +136,12 @@ def parse_tweets(request_object, tweets_list=[]):
             # tweet_id, created_at, original_tweet, extracted_book, sentiment_score, google_rating, amazon_rating
         
 
-    # next_token = m_data.get('next_token')
-    # # if next_token exists, then recursively parse tweets again
-    # if next_token:
-    #     request_object['params']['pagination_token'] = next_token
+    next_token = m_data.get('next_token')
+    # if next_token exists, then recursively parse tweets again
+    if next_token:
+        request_object['params']['pagination_token'] = next_token
 
-    #     parse_tweets(request_object, tweets_list)
+        parse_tweets(request_object, tweets_list)
 
     return tweets_list
 
@@ -168,13 +167,3 @@ def clean_tweet(text, reg_expr):
         text = re.sub(expr, '', text)
     return text
 
-
-# load_env()
-# token = os.getenv('TWITTER_TOKEN')
-# key = os.getenv('GOOGLE_BOOKS_KEY')
-# headers = generate_header(token)
-
-hashtags = ['#BookReview', '#BookRecommendations']
-hashtags_str = ' OR '.join(hashtags)
-# search_url = "https://api.twitter.com/2/tweets/search/recent"
-query_params = {'query': f'lang:en ({hashtags_str}) tweet.fields=created_at'}

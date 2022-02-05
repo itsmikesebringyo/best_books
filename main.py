@@ -17,7 +17,7 @@ def main():
     load_env()
     t_token = os.getenv('TWITTER_TOKEN')
     g_key = os.getenv('GOOGLE_BOOKS_KEY')
-    authors_test = os.getenv('BQ_AUTHORS_TEST')
+    authors_table = os.getenv('BQ_AUTHORS_TABLE')
 
     time_start, time_end = get_yesterday_timeframe()
 
@@ -25,7 +25,7 @@ def main():
         'url': 'https://api.twitter.com/2/tweets/search/recent',
         'headers': {'Authorization': f'Bearer {t_token}'},
         'params': {'query': 'lang:en (#BookReview OR #BookRecommendations)', 
-                   'max_results': 20,
+                   'max_results': 100,
                    'tweet.fields': 'created_at',
                    'start_time': time_start,
                    'end_time': time_end}
@@ -33,10 +33,7 @@ def main():
 
     tweet_data = parse_tweets(twitter_request)
 
-    bq_insert(tweet_data, authors_test)
-
-    print(tweet_data)
-    
+    bq_insert(tweet_data, authors_table)    
 
     # with open('example_response.json') as f:
     #     response = f.read()
