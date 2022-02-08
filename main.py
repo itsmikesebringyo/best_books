@@ -1,5 +1,5 @@
 import os
-from utils import get_yesterday_timeframe, load_env, parse_tweets, bq_insert
+from utils import get_yesterday_timeframe, load_env, parse_tweets, bq_insert, access_secret_version
 
 
 CLEANING_MAP = {
@@ -15,9 +15,10 @@ def main():
     Main function
     """
     load_env()
-    t_token = os.getenv('TWITTER_TOKEN')
+    project_id = os.getenv('PROJECT_ID')
+    t_token = access_secret_version(project_id=project_id, secret_id='TWITTER_TOKEN')
     g_key = os.getenv('GOOGLE_BOOKS_KEY')
-    authors_table = os.getenv('BQ_AUTHORS_TABLE')
+    authors_table = f'{project_id}.best_books.author_mentions'
 
     time_start, time_end = get_yesterday_timeframe()
 

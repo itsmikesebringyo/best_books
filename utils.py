@@ -3,13 +3,13 @@ import requests
 import datetime
 from pathlib import Path
 from dotenv import load_dotenv
-from google.cloud import bigquery
-from google_auth_oauthlib import flow
+from google.cloud import bigquery, secretmanager
+# from google_auth_oauthlib import flow
 import spacy
-# import nltk
+import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-
+nltk.download('vader_lexicon')
 NLP = spacy.load('en_core_web_sm')
 
 CLEANING_MAP = {
@@ -95,6 +95,22 @@ def bq_insert(tweet_data, bq_table):
         print('New rows have been added')
     else:
         print(f'Encountered errors while inserting rows: {errors}')
+
+
+def access_secret_version(project_id, secret_id, version_id='latest'):
+    """
+    Takes project_id, secret_id, and version as input and returns the secret value
+    """
+    # set up client
+    sm_client = secretmanager.SecretManagerServiceClient()
+
+    # Build the resource name of the secret version
+    name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
+
+    # Access the secret version and return the value
+    response = sm_client.access_secret_version(name=name)
+    secret_val = response.payload.data.decode("UTF-8")
+    return secret_val
 
 
 def parse_tweets(request_object, tweets_list=[]):
