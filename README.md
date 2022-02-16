@@ -9,7 +9,7 @@ Link to GitHub site: https://github.com/itsmikesebringyo/best_books
 
 The first part of this project is grabbing the names of authors mentioned in tweets of interest (containing `#BookReview` and `#BookRecommendations`).
 
-<iframe width="600" height="450" src="https://datastudio.google.com/embed/reporting/b9d15d0d-085f-40ff-8885-03d3aa6b26aa/page/fP6kC" frameborder="0" style="border:0" allowfullscreen></iframe>
+<iframe width="800" height="600" src="https://datastudio.google.com/embed/reporting/b9d15d0d-085f-40ff-8885-03d3aa6b26aa/page/fP6kC" frameborder="0" style="border:0" allowfullscreen></iframe>
 
 
 ## Books
