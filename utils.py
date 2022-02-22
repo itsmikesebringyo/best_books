@@ -1,9 +1,11 @@
+import base64
 import re
+from black import json
 import requests
 import datetime
 from pathlib import Path
 from dotenv import load_dotenv
-from google.cloud import bigquery, secretmanager
+from google.cloud import bigquery, secretmanager, pubsub
 # from google_auth_oauthlib import flow
 import spacy
 import nltk
@@ -182,4 +184,18 @@ def clean_tweet(text, reg_expr):
     for expr in reg_expr:
         text = re.sub(expr, '', text)
     return text
+
+
+def send_pubsub_message(topic, message_obj):
+    """
+    Takes pub/sub topic and message as input and sends message to pub/sub topic.
+    """
+    publisher_client = pubsub.PublisherClient()
+
+    message = json.dumps(message_obj)
+    byte_message = bytes(message, 'utf-8')
+
+    future = publisher_client.publish(topic=topic, data=byte_message)
+    message_id = future.result()
+
 

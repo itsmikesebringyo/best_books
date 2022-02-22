@@ -1,5 +1,5 @@
 import os
-from utils import get_yesterday_timeframe, load_env, parse_tweets, bq_insert, access_secret_version
+from utils import get_yesterday_timeframe, load_env, parse_tweets, bq_insert, access_secret_version, send_pubsub_message
 
 
 CLEANING_MAP = {
@@ -34,25 +34,19 @@ def main():
 
     tweet_data = parse_tweets(twitter_request)
 
-    bq_insert(tweet_data, authors_table)    
+    bq_insert(tweet_data, authors_table)
 
-    # with open('example_response.json') as f:
-    #     response = f.read()
-    # sample_response = json.loads(response)
-    # data = sample_response.get('data')
-    # m_data = sample_response.get('meta')
-
-
-    # for tweet in data:
-    #     raw_text = tweet.get('text')
-    #     print(raw_text)
-    #     clean_text = clean_tweet(raw_text, CLEANING_MAP.values()) 
-    #     print(clean_text)
-    #     raw_score = get_sentiment(raw_text)
-    #     print(raw_score)
-    #     print('\n')
+    # prepare everything needed to have the instance stop automatically
+    topic = f'projects/{project_id}/topics/stop-instance-event'
+    message_obj = {
+        "project_id": project_id, 
+        "zone": "us-central1-a", 
+        "instance_name": "run-best-books"
+    }
+    send_pubsub_message(topic, message_obj)
 
 
+    ##### end main
 
 if __name__ == '__main__':
     main()
