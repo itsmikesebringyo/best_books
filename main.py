@@ -37,13 +37,13 @@ def main():
     bq_insert(tweet_data, authors_table)
 
     # prepare everything needed to have the instance stop automatically
-    topic = f'projects/{project_id}/topics/stop-instance-event'
-    message_obj = {
-        "project_id": project_id, 
-        "zone": "us-central1-a", 
-        "instance_name": "run-best-books"
-    }
-    send_pubsub_message(topic, message_obj)
+    # topic = f'projects/{project_id}/topics/stop-instance-event'
+    # message_obj = {
+    #     "project_id": project_id, 
+    #     "zone": "us-central1-a", 
+    #     "instance_name": "run-best-books"
+    # }
+    # send_pubsub_message(topic, message_obj)
 
 
     ##### end main
