@@ -1,8 +1,7 @@
-import base64
 import re
-from black import json
 import requests
 import datetime
+import json
 from pathlib import Path
 from dotenv import load_dotenv
 from google.cloud import bigquery, secretmanager, pubsub
