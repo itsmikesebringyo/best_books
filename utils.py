@@ -82,13 +82,6 @@ def bq_insert(tweet_data, bq_table):
     """
     Takes a list of tweet data and bigquery table as input and inserts the data into the table
     """
-
-    # appflow = flow.InstalledAppFlow.from_client_secrets_file(
-    #     "client_secrets.json", scopes=["https://www.googleapis.com/auth/bigquery"]
-    # )
-    # appflow.run_local_server()
-    # credentials = appflow.credentials
-    # bq_client = bigquery.Client(project='', credentials=credentials)
     bq_client = bigquery.Client()
     errors = bq_client.insert_rows_json(bq_table, tweet_data)
 
